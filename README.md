@@ -29,8 +29,8 @@
 1. Open R Studio
 2. Open “app.R” script
 3. Click “Run App” in the top right corner of the script panel
-	a. Follow instructions in the app window to upload data files
-	b. Progress outputs and any error messages will be printed in the Console (bottom left panel).
+   * Follow instructions in the app window to upload data files
+   * Progress outputs and any error messages will be printed in the Console (bottom left panel).
 4. When the app is finished running, click download to save the .csv file of the new vehicle assignments.
 NOTE: The output on cost savings will not be saved. Please copy and paste this text into a separate file for your records. If you forget to save the text, the same values can be easily recalculated from the output in the .csv file.
 
