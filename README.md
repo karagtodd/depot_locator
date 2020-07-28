@@ -37,7 +37,7 @@ runGitHub("depot_locator", "karagtodd")
    * This will download and run the app.R script in this repository
    * Follow instructions in the app window to upload data files
    * Progress outputs and any error messages will be printed in the Console
-4. When the app is finished running, click download to save the .csv file of the new vehicle assignments
+3. When the app is finished running, click download to save the .csv file of the new vehicle assignments
 
 ###### Method 2
 1. Download "app.R" script
