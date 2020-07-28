@@ -34,10 +34,14 @@ install.packages("shiny")
 library(shiny)
 runGitHub("depot_locator", "karagtodd")
 ```
-3. When the app is finished running, click download to save the .csv file of the new vehicle assignments
+   * This will download and run the app.R script in this repository
+   * Follow instructions in the app window to upload data files
+   * Progress outputs and any error messages will be printed in the Console
+4. When the app is finished running, click download to save the .csv file of the new vehicle assignments
 
 ###### Method 2
-1. Open R Studio
+1. Download "app.R" script
+2. Open R Studio
 2. Open “app.R” script
 3. Click “Run App” in the top right corner of the script panel
    * Follow instructions in the app window to upload data files
