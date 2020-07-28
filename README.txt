@@ -1,0 +1,46 @@
+Instructions for using the Depot Locator Tool
+
+Download R and R Studio
+1. Download R from this website for free: https://cran.r-project.org/bin/windows/base/
+2. Download R Studio from this website (also for free): https://www.rstudio.com/products/rstudio/download/#download
+	a. Provides an interface that’s easier to work with
+
+Check that you have all input files
+1. GTFS data
+	a. calendar.txt
+	b. trips.txt
+	c. routes.txt
+	d. stop_times.txt
+	e. stops.txt
+2. Existing and candidate depot sites
+	a. A .csv file with data on existing depots. The file should have at least the following columns: 
+		1. A column titled “id” with the ID #'s of your depots 
+			i) If the depots do not have ID’s, they can simply be numbered 1, 2, 3, etc.
+		2. A column titled 'lat' with latitude coordinates of your depots  		3. A column titled 'lon' with longitude coordinates of your depots
+	b. A .csv file with the candidate properties you’re considering. The file should have at least the following columns:
+		1. A column with the name or address of the properties 
+		2. A column with the ID #'s of the properties 
+			i) If the depots do not have ID’s, they can simply be numbered 1, 2, 3, etc. 		3. A column titled 'lat' with latitude coordinates of the properties 		4. A column titled 'lon' with longitude coordinates of the properties
+
+Run the tool in R Studio
+1. Open R Studio
+2. Open “app.R” script
+3. Click “Run App” in the top right corner of the script panel
+	a. Follow instructions in the app window to upload data files
+	b. Progress outputs and any error messages will be printed in the Console (bottom left panel).
+4. When the app is finished running, click download to save the .csv file of the new vehicle assignments.
+NOTE: The output on cost savings will not be saved. Please copy and paste this text into a separate file for your records. If you forget to save the text, the same values can be easily recalculated from the output in the .csv file.
+
+Common Errors and Solutions
+• Error message: “The following highway types are present in data yet lack corresponding weight_profile values: road, corridor,”
+	o This will not stop the code from running. It is just a warning that some travel time estimates will be less accurate than others.
+• Error message: “NAs introduced by coercion”
+	o Problem: This is likely due to the formatting of your input for hourly wage and/or operating cost. 
+	o It should not stop the app from running but will probably result in “NA” values in the output text instead of calculating cost savings.
+	o Solution: Ensure that only numeric characters are used in your cost input. For example, 15.25 is acceptable, but $15.25 will result in this error message.
+• Error message: “Warning in read.table(file = file, header = header, sep = sep, quote = quote,  : incomplete final line found by readTableHeader”
+	o Problem: The program is unable to read one of the input files. The problem is most likely in one of the .csv property files.
+	o Solution:
+		▪ Open the .csv file in a simple text editor (Notepad, TextEdit, etc.)
+		▪ Place your cursor at the end of the last line and press Enter.
+		▪ Save the file and re-run the app.
