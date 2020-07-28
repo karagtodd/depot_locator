@@ -3,7 +3,7 @@
 ## Download R and R Studio
 1. Download R from this website for free: https://cran.r-project.org/bin/windows/base/
 2. Download R Studio from this website (also for free): https://www.rstudio.com/products/rstudio/download/#download
-	a. Provides an interface that’s easier to work with
+   * Provides an interface that’s easier to work with
 
 ## Check that you have all input files
 1. GTFS data
