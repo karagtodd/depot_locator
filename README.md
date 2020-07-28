@@ -28,7 +28,7 @@
 ## Run the tool in R Studio
 ###### Method 1
 1. Open R Studio
-2. Paste the following lines in the Console (bottom left panel):
+2. Paste the following lines in the Console (default bottom-left panel) and press "enter":
 ```
 install.packages("shiny")
 library(shiny)
