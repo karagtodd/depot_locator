@@ -68,6 +68,21 @@ ui <- fluidPage(
   fileInput(inputId = "vac.input", label = "", 
             buttonLabel = "Browse..."),
   
+  helpText(h4("Some residential roads might be necessary to reach first and last stops, but their widths and intersection characteristic may be difficult for full-size buses to navigate. Choose whether you would like to include them in your model."),
+           style = "color:black"),
+  helpText(h5(em("Removing residential roads may produce a model with slightly reduced accuracy. However, including residential roads may assume bus paths that are not physically usable. Running the model twice will provide a balance between these limitations.")),
+           style = "color:black"),
+  radioButtons(
+    inputId = "resRoad",
+    label = "Include Residential Roads?",
+    choices = c(
+      "Yes" = "y",
+      "No" = "n"
+      ),
+    inline = T,
+    selected = "n"
+  ),
+  
   actionButton(inputId = "submit", label = "Submit"),
   helpText(br()),
   
@@ -103,7 +118,7 @@ server <- function(input, output){
     routes <- input$routes.input
     times <- input$times.input
     stops <- input$stops.input
-    
+    resChoice <- input$resRoad
     
     
     # return NULL if any file inputs are missing
@@ -128,21 +143,22 @@ server <- function(input, output){
     routes <- read.delim(routes$datapath, sep = "\t", stringsAsFactors = FALSE)
     times <- read.delim(times$datapath, sep = ",", stringsAsFactors = FALSE)
     stops <- read.delim(stops$datapath, sep = "\t", stringsAsFactors = FALSE)
-    
+
     
     # cost inputs
     if(input$wage.input == ""){
       hourly_wage <- 15.00
       cat(file = stderr(), "Using default driver wage of $15/hr \n")                       # TRACING PROGRESS
+    }else{
+      hourly_wage <- as.numeric(input$wage.input)
     }
     if(input$op_cost.input == ""){
       op_cost_mi <- 9.00
       cat(file = stderr(), "Using default operating cost of $9/mi \n")                       # TRACING PROGRESS
+    }else{
+      op_cost_mi <- as.numeric(input$op_cost.input)
     }
-    hourly_wage <- as.numeric(input$wage.input)
-    op_cost_mi <- as.numeric(input$op_cost.input)
-    
-    
+
     ##### clean & format data #####
     # eliminate rail routes                                                           
     rail_ids <- routes$route_id[which(!grepl("\\d", routes$route_short_name))]
@@ -190,33 +206,50 @@ server <- function(input, output){
     withProgress(message = "Building street network", detail = "This may take a while...", value = 0, {
       setProgress(value = 0.3)
       system.time( #1179 seconds / ~20 mins
-        streets <- dodgr_streetnet(box)
+        streets <- dodgr_streetnet(bbox=box)
       )
       setProgress(value = 1)
     })
 
     cat(file = stderr(), "Network complete \n")                       # TRACING PROGRESS  
       
+    if(resChoice=="n"){
     # remove residential streets to improve processing time
-    streets$type_code <- ifelse((streets$highway == "motorway_link" | streets$highway == "tertiary_link" |
-                                   streets$highway == "unclassified" | streets$highway == "primary" |
-                                   streets$highway == "tertiary" | streets$highway == "motorway" | 
-                                   streets$highway == "secondary" | streets$highway == "trunk_link" |
-                                   streets$highway == "secondary_link" | streets$highway == "trunk" |
-                                   streets$highway == "primary_link" | streets$highway == "road" | 
-                                   streets$highway == "corridor") & !is.na(streets$highway), 1, 0)
+    streets$type_code <- ifelse((
+      streets$highway == "motorway_link" | streets$highway == "tertiary_link" |
+        streets$highway == "unclassified" | streets$highway == "primary" |
+        streets$highway == "tertiary" | streets$highway == "motorway" | 
+        streets$highway == "secondary" | streets$highway == "trunk_link" |
+        streets$highway == "secondary_link" | streets$highway == "trunk" |
+        streets$highway == "primary_link" | streets$highway == "road" | 
+        streets$highway == "corridor") &
+        !is.na(streets$highway), 1, 0)
+    cat(file = stderr(), "Building network without residential roads \n")
+    }else if (resChoice=="y"){
+                                     streets$type_code <- ifelse((
+                                       streets$highway == "motorway_link" | streets$highway == "tertiary_link" |
+                                         streets$highway == "unclassified" | streets$highway == "primary" |
+                                         streets$highway == "tertiary" | streets$highway == "motorway" |
+                                         streets$highway == "secondary" | streets$highway == "trunk_link" |
+                                         streets$highway == "secondary_link" | streets$highway == "trunk" |
+                                         streets$highway == "primary_link" | streets$highway == "road" |
+                                         streets$highway == "corridor" | streets$highway == "residential") &
+                                         !is.na(streets$highway), 1, 0)
+                                     
+                                     cat(file = stderr(), "Building network with residential roads \n")
+                                     }
     
     
-    streets_nores <- streets[streets$type_code == 1, ]
-    names(st_geometry(streets_nores)) = NULL
+    streets_fil <- streets[streets$type_code == 1, ]
+    names(st_geometry(streets_fil)) = NULL
     
     # delete unnecessary variables in network
-    streets_nores <- streets_nores %>% select(c("osm_id", "name", "highway", "width", "width.lanes", "geometry"))
+    streets_fil <- streets_fil %>% select(c("osm_id", "name", "highway", "width", "width.lanes", "geometry"))
     
     # apply weights to OSM network
     # distance in meters, time in seconds
       system.time( #38 seconds
-        net <- weight_streetnet(streets_nores, wt_profile = "motorcar")
+        net <- weight_streetnet(streets_fil, wt_profile = "psv")
       )
       
     cat(file = stderr(), "Placing properties in the network \n")                            # TRACING PROGRESS  
