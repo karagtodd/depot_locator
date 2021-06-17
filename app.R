@@ -57,7 +57,7 @@ ui <- fluidPage(
               "2. A column titled 'lat' with latitude coordinates of your depots", br(), 
               "3. A column titled 'lon' with longitude coordinates of your depots"),
            style = "color:Black"),
-  fileInput(inputId = "garages.input", label = "", buttonLabel = "Browse..."),
+  fileInput(inputId = "garages.input", label = "", buttonLabel = "Existing Garages..."),
   
   helpText(h5("Upload the data on the vacant properties you're considering. The file should have at least the following columns:", br(), 
               "1. A column with the name or address of the properties", br(),
@@ -66,7 +66,7 @@ ui <- fluidPage(
               "4. A column titled 'lon' with longitude coordinates of the properties"),
            style = "color:Black"),
   fileInput(inputId = "vac.input", label = "", 
-            buttonLabel = "Browse..."),
+            buttonLabel = "Vacant Properties..."),
   
   helpText(h4("Some residential roads might be necessary to reach first and last stops, but their widths and intersection characteristic may be difficult for full-size buses to navigate. Choose whether you would like to include them in your model."),
            style = "color:black"),
@@ -257,16 +257,16 @@ server <- function(input, output){
     # properties are not vertices of the network, so we match them to the closest point
     verts <- dodgr_vertices(net)
     
-    vac_prop$vert <- match_points_to_graph(verts, vac_prop[, c("lon", "lat")]) 
+    vac_prop$vert <- match_points_to_graph(verts, vac_prop[, c("lon", "lat")], connected = TRUE) 
     vac_prop$vert <- verts$id[vac_prop$vert]
     
-    garages$vert <- match_points_to_graph(verts, garages[, c("lat", "lon")])
+    garages$vert <- match_points_to_graph(verts, garages[, c("lat", "lon")], connected = TRUE)
     garages$vert <- verts$id[garages$vert]
     
     cat(file = stderr(), "Properties are matched to network vertices \n")                       # TRACING PROGRESS
     
     # match first/last stops to vertices
-    fl_stops$vert <- match_points_to_graph(verts, fl_stops[, c("lon", "lat")])
+    fl_stops$vert <- match_points_to_graph(verts, fl_stops[, c("lon", "lat")], connected = TRUE)
     fl_stops$vert <- verts$id[fl_stops$vert]
     fl_stops$vert[fl_stops$stop_id == 902145] <- fl_stops$vert[fl_stops$stop_id == 902144] # manually fixing North Lindbergh stop
     
