@@ -147,13 +147,13 @@ server <- function(input, output){
     
     # cost inputs
     if(input$wage.input == ""){
-      hourly_wage <- 15.00
+      hourly_wage <- 16.38
       cat(file = stderr(), "Using default driver wage of $15/hr \n")                       # TRACING PROGRESS
     }else{
       hourly_wage <- as.numeric(input$wage.input)
     }
     if(input$op_cost.input == ""){
-      op_cost_mi <- 9.00
+      op_cost_mi <- 8.45
       cat(file = stderr(), "Using default operating cost of $9/mi \n")                       # TRACING PROGRESS
     }else{
       op_cost_mi <- as.numeric(input$op_cost.input)
