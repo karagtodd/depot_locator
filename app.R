@@ -57,7 +57,7 @@ ui <- fluidPage(
               "2. A column titled 'lat' with latitude coordinates of your depots", br(), 
               "3. A column titled 'lon' with longitude coordinates of your depots"),
            style = "color:Black"),
-  fileInput(inputId = "garages.input", label = "", buttonLabel = "Browse..."),
+  fileInput(inputId = "garages.input", label = "", buttonLabel = "Existing Garages..."),
   
   helpText(h5("Upload the data on the vacant properties you're considering. The file should have at least the following columns:", br(), 
               "1. A column with the name or address of the properties", br(),
@@ -66,7 +66,22 @@ ui <- fluidPage(
               "4. A column titled 'lon' with longitude coordinates of the properties"),
            style = "color:Black"),
   fileInput(inputId = "vac.input", label = "", 
-            buttonLabel = "Browse..."),
+            buttonLabel = "Vacant Properties..."),
+  
+  helpText(h4("Some residential roads might be necessary to reach first and last stops, but their widths and intersection characteristic may be difficult for full-size buses to navigate. Choose whether you would like to include them in your model."),
+           style = "color:black"),
+  helpText(h5(em("Removing residential roads may produce a model with slightly reduced accuracy. However, including residential roads may assume bus paths that are not physically usable. Running the model twice will provide a balance between these limitations.")),
+           style = "color:black"),
+  radioButtons(
+    inputId = "resRoad",
+    label = "Include Residential Roads?",
+    choices = c(
+      "Yes" = "y",
+      "No" = "n"
+      ),
+    inline = T,
+    selected = "n"
+  ),
   
   actionButton(inputId = "submit", label = "Submit"),
   helpText(br()),
@@ -103,7 +118,7 @@ server <- function(input, output){
     routes <- input$routes.input
     times <- input$times.input
     stops <- input$stops.input
-    
+    resChoice <- input$resRoad
     
     
     # return NULL if any file inputs are missing
@@ -128,21 +143,22 @@ server <- function(input, output){
     routes <- read.delim(routes$datapath, sep = "\t", stringsAsFactors = FALSE)
     times <- read.delim(times$datapath, sep = ",", stringsAsFactors = FALSE)
     stops <- read.delim(stops$datapath, sep = "\t", stringsAsFactors = FALSE)
-    
+
     
     # cost inputs
     if(input$wage.input == ""){
-      hourly_wage <- 15.00
+      hourly_wage <- 16.38
       cat(file = stderr(), "Using default driver wage of $15/hr \n")                       # TRACING PROGRESS
+    }else{
+      hourly_wage <- as.numeric(input$wage.input)
     }
     if(input$op_cost.input == ""){
-      op_cost_mi <- 9.00
+      op_cost_mi <- 8.45
       cat(file = stderr(), "Using default operating cost of $9/mi \n")                       # TRACING PROGRESS
+    }else{
+      op_cost_mi <- as.numeric(input$op_cost.input)
     }
-    hourly_wage <- as.numeric(input$wage.input)
-    op_cost_mi <- as.numeric(input$op_cost.input)
-    
-    
+
     ##### clean & format data #####
     # eliminate rail routes                                                           
     rail_ids <- routes$route_id[which(!grepl("\\d", routes$route_short_name))]
@@ -185,38 +201,74 @@ server <- function(input, output){
     
     ##### set up network #####
     box <- st_bbox(fl_stop_locs)
-    box <- matrix(c(box[1], box[3], box[2], box[4]), 2, 2)
+    # box <- matrix(c(box[1], box[3], box[2], box[4]), 2, 2)
+
+    lon_min <- box[1]
+    lon_max <- box[3]
+    lat_min <- box[2]
+    lat_max <- box[4]
+    garage_lon_min <- min(garages$lon)
+    garage_lon_max <- max(garages$lon)
+    garage_lat_min <- min(garages$lat)
+    garage_lat_max <- max(garages$lat)
+    vac_lon_min <- min(vac_prop$lon)
+    vac_lon_max <- max(vac_prop$lon)
+    vac_lat_min <- min(vac_prop$lat)
+    vac_lat_max <- max(vac_prop$lat)
+    
+    lon_min <- min(lon_min, garage_lon_min, vac_lon_min)
+    lon_max <- max(lon_max, garage_lon_max, vac_lon_max)
+    lat_min <- min(lat_min, garage_lat_min, vac_lat_min)
+    lat_max <- max(lat_max, garage_lat_max, vac_lat_max)
+    box_full <- matrix(c(lon_min, lon_max, lat_min, lat_max), 2, 2)
     
     withProgress(message = "Building street network", detail = "This may take a while...", value = 0, {
       setProgress(value = 0.3)
       system.time( #1179 seconds / ~20 mins
-        streets <- dodgr_streetnet(box)
+        streets <- dodgr_streetnet(bbox=box_full)
       )
       setProgress(value = 1)
     })
 
     cat(file = stderr(), "Network complete \n")                       # TRACING PROGRESS  
       
+    if(resChoice=="n"){
     # remove residential streets to improve processing time
-    streets$type_code <- ifelse((streets$highway == "motorway_link" | streets$highway == "tertiary_link" |
-                                   streets$highway == "unclassified" | streets$highway == "primary" |
-                                   streets$highway == "tertiary" | streets$highway == "motorway" | 
-                                   streets$highway == "secondary" | streets$highway == "trunk_link" |
-                                   streets$highway == "secondary_link" | streets$highway == "trunk" |
-                                   streets$highway == "primary_link" | streets$highway == "road" | 
-                                   streets$highway == "corridor") & !is.na(streets$highway), 1, 0)
+    streets$type_code <- ifelse((
+      streets$highway == "motorway_link" | streets$highway == "tertiary_link" |
+        streets$highway == "unclassified" | streets$highway == "primary" |
+        streets$highway == "tertiary" | streets$highway == "motorway" | 
+        streets$highway == "secondary" | streets$highway == "trunk_link" |
+        streets$highway == "secondary_link" | streets$highway == "trunk" |
+        streets$highway == "primary_link" | streets$highway == "road" | 
+        streets$highway == "corridor") &
+        !is.na(streets$highway), 1, 0)
+    cat(file = stderr(), "Building network without residential roads \n")
+    }else if (resChoice=="y"){
+                                     streets$type_code <- ifelse((
+                                       streets$highway == "motorway_link" | streets$highway == "tertiary_link" |
+                                         streets$highway == "unclassified" | streets$highway == "primary" |
+                                         streets$highway == "tertiary" | streets$highway == "motorway" |
+                                         streets$highway == "secondary" | streets$highway == "trunk_link" |
+                                         streets$highway == "secondary_link" | streets$highway == "trunk" |
+                                         streets$highway == "primary_link" | streets$highway == "road" |
+                                         streets$highway == "corridor" | streets$highway == "residential") &
+                                         !is.na(streets$highway), 1, 0)
+                                     
+                                     cat(file = stderr(), "Building network with residential roads \n")
+                                     }
     
     
-    streets_nores <- streets[streets$type_code == 1, ]
-    names(st_geometry(streets_nores)) = NULL
+    streets_fil <- streets[streets$type_code == 1, ]
+    names(st_geometry(streets_fil)) = NULL
     
     # delete unnecessary variables in network
-    streets_nores <- streets_nores %>% select(c("osm_id", "name", "highway", "width", "width.lanes", "geometry"))
+    streets_fil <- streets_fil %>% select(c("osm_id", "name", "highway", "width", "width.lanes", "geometry"))
     
     # apply weights to OSM network
     # distance in meters, time in seconds
       system.time( #38 seconds
-        net <- weight_streetnet(streets_nores, wt_profile = "motorcar")
+        net <- weight_streetnet(streets_fil, wt_profile = "psv")
       )
       
     cat(file = stderr(), "Placing properties in the network \n")                            # TRACING PROGRESS  
@@ -224,16 +276,16 @@ server <- function(input, output){
     # properties are not vertices of the network, so we match them to the closest point
     verts <- dodgr_vertices(net)
     
-    vac_prop$vert <- match_points_to_graph(verts, vac_prop[, c("lon", "lat")]) 
+    vac_prop$vert <- match_points_to_graph(verts, vac_prop[, c("lon", "lat")], connected = TRUE) 
     vac_prop$vert <- verts$id[vac_prop$vert]
     
-    garages$vert <- match_points_to_graph(verts, garages[, c("lat", "lon")])
+    garages$vert <- match_points_to_graph(verts, garages[, c("lat", "lon")], connected = TRUE)
     garages$vert <- verts$id[garages$vert]
     
     cat(file = stderr(), "Properties are matched to network vertices \n")                       # TRACING PROGRESS
     
     # match first/last stops to vertices
-    fl_stops$vert <- match_points_to_graph(verts, fl_stops[, c("lon", "lat")])
+    fl_stops$vert <- match_points_to_graph(verts, fl_stops[, c("lon", "lat")], connected = TRUE)
     fl_stops$vert <- verts$id[fl_stops$vert]
     fl_stops$vert[fl_stops$stop_id == 902145] <- fl_stops$vert[fl_stops$stop_id == 902144] # manually fixing North Lindbergh stop
     

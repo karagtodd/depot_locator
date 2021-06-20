@@ -1,0 +1,116 @@
+route_id	route_short_name	route_long_name	route_desc	route_type	route_url	route_color	route_text_color
+7634	1	Marietta Blvd/Joseph E Lowery Blvd		3		819FF7	
+7635	2	Ponce de Leon Avenue / Druid Hills		3		819FF7	
+7636	3	Martin Luther King Jr Dr/Auburn Ave		3		819FF7	
+7637	4	Moreland Avenue		3		819FF7	
+7638	5	Piedmont Road / Sandy Springs		3		819FF7	
+7639	6	Clifton Road / Emory		3		819FF7	
+7640	8	North Druid Hills Road		3		819FF7	
+7641	9	Boulevard / Tilson Road		3		819FF7	
+7642	12	Howell Mill Road / Cumberland		3		819FF7	
+7643	14	14th Street / Blandtown		3		819FF7	
+7644	15	Candler Road		3		819FF7	
+7646	19	Clairmont Road / West Howard Avenue		3		819FF7	
+7647	21	Memorial Drive		3		819FF7	
+7648	24	McAfee / Hosea Williams		3		819FF7	
+7649	25	Peachtree Industrial Boulevard		3		819FF7	
+7650	26	Marietta Street / Perry Boulevard		3		819FF7	
+7651	27	Cheshire Bridge Road		3		819FF7	
+7652	30	LaVista Road		3		819FF7	
+7653	32	Bouldercrest		3		819FF7	
+7655	34	Gresham Road		3		819FF7	
+7656	36	N Decatur Road / Virginia Highland		3		819FF7	
+7657	37	Defoors Ferry Road		3		819FF7	
+7658	39	Buford Highway		3		819FF7	
+7738	40	Peachtree Street / Downtown		3		819FF7	
+7659	42	Pryor Road		3		819FF7	
+7660	47	I-85 Access Road / Briarwood Road		3		819FF7	
+7661	49	McDonough Boulevard		3		819FF7	
+7662	50	Donald Lee Hollowell Parkway		3		819FF7	
+7663	51	Joseph E Boone Boulevard		3		819FF7	
+7665	55	Jonesboro Road		3		819FF7	
+7667	58	Hollywood Road / Lucile Avenue		3		819FF7	
+7668	60	Hightower Road		3		819FF7	
+7669	66	Lynhurst Drive / Princeton Lakes		3		819FF7	
+7671	68	Benjamin E Mays Drive		3		819FF7	
+7672	71	Cascade  Road		3		819FF7	
+7673	73	Fulton Industrial		3		819FF7	
+7674	74	Flat Shoals Road		3		819FF7	
+7675	75	Lawrenceville Highway		3		819FF7	
+7676	78	Cleveland Ave		3		819FF7	
+7677	79	Sylvan Hills		3		819FF7	
+7678	81	Venetian Hills / Delowe Drive		3		819FF7	
+7679	82	Camp Creek / South Fulton Parkway		3		819FF7	
+7680	83	Campbellton Road		3		819FF7	
+7681	84	Washington Rd/Camp Crk Marketplace		3		819FF7	
+7682	85	Roswell		3		819FF7	
+7683	86	Fairington Road		3		819FF7	
+7684	87	Roswell Road / Morgan Falls		3		819FF7	
+7685	89	Old National Highway		3		819FF7	
+7686	93	Headland Drive / Main Street		3		819FF7	
+7735	94	Northside Drive		3		819FF7	
+7687	95	Metropolitan Parkway		3		819FF7	
+7689	102	North Avenue / Little Five Points		3		819FF7	
+7690	103	Peeler Road		3		819FF7	
+7691	104	Winters Chapel Road		3		819FF7	
+7692	107	Glenwood		3		819FF7	
+7694	110	Peachtree Road / Buckhead		3		819FF7	
+7695	111	Snapfinger Woods		3		819FF7	
+7696	114	Columbia Drive		3		819FF7	
+7697	115	Covington Highway		3		819FF7	
+7698	116	Redan Road		3		819FF7	
+7699	117	Rockbridge Road / Panola Road		3		819FF7	
+7700	119	Hairston Road / Stone Mtn Village		3		819FF7	
+7701	120	East Ponce De Leon Avenue		3		819FF7	
+7702	121	Memorial Drive / N Hairston Road		3		819FF7	
+7703	123	Church Street / North DeKalb Mall		3		819FF7	
+7704	124	Pleasantdale Road		3		819FF7	
+7705	125	Clarkston		3		819FF7	
+7706	126	Chamblee-Tucker Road		3		819FF7	
+7707	132	Tilly Mill Road		3		819FF7	
+11845	133	Shallowford Road		3		819FF7	
+7708	140	North Point Parkway		3		819FF7	
+7709	141	Haynes Bridge Road / Milton		3		819FF7	
+7739	142	East Holcomb Bridge Road		3		819FF7	
+7710	143	Windward Park & Ride		3		819FF7	
+7711	148	Mount Vernon Highway		3		819FF7	
+7712	150	Dunwoody Village		3		819FF7	
+7713	153	James Jackson Parkway		3		819FF7	
+7714	155	Pittsburgh		3		819FF7	
+7715	162	Myrtle Drive / Alison Court		3		819FF7	
+7716	165	Fairburn Road		3		819FF7	
+7718	172	Sylvan Road / Virginia Avenue		3		819FF7	
+7719	178	Empire Blvd / Southside Ind Park		3		819FF7	
+7720	180	Roosevelt Highway		3		819FF7	
+7721	181	Washington Road / Fairburn		3		819FF7	
+7722	183	Barge Road P&R / Lakewood		3		819FF7	
+7723	185	Alpharetta		3		819FF7	
+7724	186	Rainbow Drive / South DeKalb		3		819FF7	
+7725	189	Flat Shoals Road / Scofield Road		3		819FF7	
+7726	191	Riverdale / ATL Intl Terminal		3		819FF7	
+7727	192	Old Dixie / Tara Boulevard		3		819FF7	
+7728	193	Morrow / Jonesboro		3		819FF7	
+7729	194	Conley Road / Mt Zion		3		819FF7	
+7730	195	Forest Parkway		3		819FF7	
+7731	196	Upper Riverdale / Southlake		3		819FF7	
+7732	201	Six Flags Over Georgia		3		819FF7	
+7733	221	Memorial Drive Limited		3		819FF7	
+7740	295	Metropolitan Campus Express		3		819FF7	
+7734	800	Lovejoy		3		819FF7	
+7693	809	Monroe Drive / Boulevard		3		819FF7	
+11840	813	Atlanta University Center		3		819FF7	
+7688	816	North Highland Avenue		3		819FF7	
+7736	823	Belvedere		3		819FF7	
+7654	825	Johnson Ferry Road		3		819FF7	
+11844	832	Grant Park		3		819FF7	
+11841	850	Carroll Heights / Fairburn Heights		3		819FF7	
+7664	853	Center Hill		3		819FF7	
+7666	856	Baker Hills / Wilson Mill Meadows		3		819FF7	
+7737	865	Boulder Park Drive		3		819FF7	
+7670	867	Peyton Forest / Dixie Hills		3		819FF7	
+11842	899	Old Fourth Ward		3		819FF7	
+8766	BLUE	BLUE-East/West Line		1		0101DF	
+8746	GOLD	GOLD-Northeast Doraville Line		1		FFBF00	
+8748	GREEN	GREEN-Proctor Creek Line		1		04B404	
+8747	RED	RED-North South North Springs Line		1		FF0000	
+11843	ATL SC	Atlanta Streetcar		1		FF0000	
