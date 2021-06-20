@@ -201,12 +201,31 @@ server <- function(input, output){
     
     ##### set up network #####
     box <- st_bbox(fl_stop_locs)
-    box <- matrix(c(box[1], box[3], box[2], box[4]), 2, 2)
+    # box <- matrix(c(box[1], box[3], box[2], box[4]), 2, 2)
+
+    lon_min <- box[1]
+    lon_max <- box[3]
+    lat_min <- box[2]
+    lat_max <- box[4]
+    garage_lon_min <- min(garages$lon)
+    garage_lon_max <- max(garages$lon)
+    garage_lat_min <- min(garages$lat)
+    garage_lat_max <- max(garages$lat)
+    vac_lon_min <- min(vac_prop$lon)
+    vac_lon_max <- max(vac_prop$lon)
+    vac_lat_min <- min(vac_prop$lat)
+    vac_lat_max <- max(vac_prop$lat)
+    
+    lon_min <- min(lon_min, garage_lon_min, vac_lon_min)
+    lon_max <- max(lon_max, garage_lon_max, vac_lon_max)
+    lat_min <- min(lat_min, garage_lat_min, vac_lat_min)
+    lat_max <- max(lat_max, garage_lat_max, vac_lat_max)
+    box_full <- matrix(c(lon_min, lon_max, lat_min, lat_max), 2, 2)
     
     withProgress(message = "Building street network", detail = "This may take a while...", value = 0, {
       setProgress(value = 0.3)
       system.time( #1179 seconds / ~20 mins
-        streets <- dodgr_streetnet(bbox=box)
+        streets <- dodgr_streetnet(bbox=box_full)
       )
       setProgress(value = 1)
     })
