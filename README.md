@@ -1,4 +1,14 @@
 # Instructions for using the Depot Locator Tool
+### Automatically load data from MARTA case study
+1. Download R and (optional) R studio as per the directions below
+2. Paste the following code in the console and press "enter"
+```
+install.packages("shiny")
+shiny::runGitHub("depot_locator", "freyja-bt", "challenge")
+```
+3. Click the checkbox "Load files from the MARTA case study" at the top
+4. (Optional) Scroll down to the bottom and choose to include residential roads, if desired
+5. Click "Submit" at the bottom
 
 ## Download R and R Studio
 1. Download R from this website for free: https://cran.r-project.org/bin/windows/base/
